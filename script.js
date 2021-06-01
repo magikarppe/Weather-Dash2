@@ -167,7 +167,7 @@ function getWeather(searchVal) {
         console.log(uviVal);
   
         var uviElement = document.createElement("li");
-        $(uviEl).text("UV Index: " + uviVal);
+        $(uviElement).text("UV Index: " + uviVal);
         todElement.append(uviElement);
       });
   }
