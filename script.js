@@ -1,13 +1,12 @@
 var apiKey = "ef80f2dc5e60b96cd68851cdf32e0502";
-var searchBtn = document.querySelector("#search-button");
 var todElement = document.getElementById("today");
 var fcElement = document.getElementById("forecast");
-var searchButton = document.getElementById("search-button");
+var searchBtn = document.querySelector("#search-button");
+
 var cities = JSON.parse(localStorage.getItem("cities")) || [];
 var cityHistory = document.querySelector("#history");
 
 searchBtn.addEventListener("click", searchVal);
-
 
 function searchVal () {
     var searchVal = document.querySelector('#search-value').value;
@@ -20,9 +19,6 @@ function searchVal () {
       saveSearchVal();
     }
   }
-
-    
-  
 
 function saveSearchVal() {
     cityHistory.innerHTML = "";
@@ -37,7 +33,7 @@ function saveSearchVal() {
       // click and gets attributes
       cityPrev.addEventListener("click", function () {
         // buttons' loc value
-        getWeather(searchVal)(this.getAttribute("location"));
+        getWeather(this.getAttribute("location"));
         fiveDay(this.getAttribute("location"));
       });
   
@@ -50,61 +46,59 @@ function saveSearchVal() {
 
 //current weather 
 function getWeather(searchVal) {
-    var apiURL = "https://api.openweathermap.org/data/2.5/weather?q=" + searchVal + "&appid=" + apiKey + "&units=imperial";
+  var apiURL = "https://api.openweathermap.org/data/2.5/weather?q=" + searchVal + "&appid=" + apiKey + "&units=imperial";
 
-    fetch(apiURL)
-        .then(function (response) {
-            return response.json();
-        })
-        .then(function (data) {
-            console.log(data);
-            var loc = data.name;
-            var temp = data.main.temp;
-            var wind = data.wind.speed;
-            var humid = data.main.humidity;
-            var long = data.coord.lon;
-            var lat = data.coord.lat;
-            var dateElement = moment().format("MM/DD/YYYY");
-            var iconWeatherEl =
-                "http://openweathermap.org/img/wn/" + data.weather[0].icon + ".png";
-            var iconElement = document.createElement("img");
-            var placeElement = document.createElement("h1");
-            var templiElement = document.createElement("li");
-            var windliElement = document.createElement("li");
-            var humiliElement = document.createElement("li");
+  fetch(apiURL)
+    .then(function (response) {
+      return response.json();
+    })
+    .then(function (data) {
+      console.log(data);
+      var loc = data.name;
+      var temp = data.main.temp;
+      var wind = data.wind.speed;
+      var humid = data.main.humidity;
+      var long = data.coord.lon;
+      var lat = data.coord.lat;
+      var dateElement = moment().format("MM/DD/YYYY");
+      var iconWeatherEl = 
+      "http://openweathermap.org/img/wn/" + data.weather[0].icon + ".png";
+      var iconElement = document.createElement("img");
+      var placeElement = document.createElement("h1");
+      var templiElement = document.createElement("li");
+      var windliElement = document.createElement("li");
+      var humiliElement = document.createElement("li");
 
-            iconElement.setAttribute("src", iconWeatherEl);
+      iconElement.setAttribute("src", iconWeatherEl);
 
-            uvIndex(latitude, longitude);
+      uvIndex(lat, long);
         
-            console.log("temperature---------");
-            console.log(temp);
-            console.log("wind speed----------");
-            console.log(wind);
-            console.log("humidity----------");
-            console.log(humid);
-            console.log("city being searched---------");
-            console.log(loc);
-            console.log("longitude---------");
-            console.log(long);
-            console.log("latitude---------");
-            console.log(lat);
-           
+      console.log("temperature---------");
+      console.log(temp);
+      console.log("wind speed----------");
+      console.log(wind);
+      console.log("humidity----------");
+      console.log(humid);
+      console.log("city being searched---------");
+      console.log(loc);
+      console.log("longitude---------");
+      console.log(long);
+      console.log("latitude---------");
+      console.log(lat);
+    
+      $(todElement).css({ border: "black solid 2px", padding: "10px" });
+      $(placeElement).text(loc + " " + dateElement + "");
+      $(windliElement).text("Windspeed: " + wind + " MPH");
+      $(templiElement).text("Temperature: " + temp + "°F");
+      $(humiliElement).text("Humidity: " + humid + " %");
 
-            $(todayElement).css({ border: "black solid 2px", padding: "10px" });
-            $(placeEl).text(location + " " + dateElement + "");
-            $(windliEl).text("Windspeed: " + wind + " MPH");
-            $(templiEl).text("Temperature: " + temp + "°F");
-            $(humiliEl).text("Humidity: " + humid + " %");
-
-            todayElement.append(placeElement);
-            todayElement.append(iconElement);
-            todayElement.append(windliElement);
-            todayElement.append(templiElement);
-            todayElement.append(humiliElement);
-        });
-        
-        todayElement.innerHTML = "";
+      todElement.append(placeElement);
+      todElement.append(iconElement);
+      todElement.append(windliElement);
+      todElement.append(templiElement);
+      todElement.append(humiliElement);
+    });
+  todElement.innerHTML = "";
 }
 
 
@@ -123,40 +117,38 @@ function getWeather(searchVal) {
         var day = 1;
         for (var i = 0; i < data.list.length; i++) {
           if (data.list[i].dt_txt.indexOf("15:00:00") !== -1) {
-            var todayDate = moment().add(day, "days").format("MM/DD/YYYY");
-            var date = todayDate;
+            var todDate = moment().add(day, "days").format("MM/DD/YYYY");
+            var date = todDate;
             var iconUrl =
-              "http://openweathermap.org/img/wn/" +
-              data.list[i].weather[0].icon +
-              ".png";
+              "http://openweathermap.org/img/wn/" + data.list[i].weather[0].icon + ".png";
             var temp = "Temp: " + data.list[i].main.temp + "°F";
             var wind = "Wind: " + data.list[i].wind.speed + " MPH";
             var humidity = "Humidity: " + data.list[i].main.humidity + " %";
   
-            var cardEl = document.createElement("div");
-            cardEl.classList.add("card");
+            var cardElement = document.createElement("div");
+            cardElement.classList.add("card");
   
-            var dateFiveEl = document.createElement("h5");
-            dateFiveEl.textContent = date;
-            cardEl.append(dateFiveEl);
+            var dateFiveElm = document.createElement("h5");
+            dateFiveElm.textContent = date;
+            cardElement.append(dateFiveElm);
   
-            var iconFiveEl = document.createElement("img");
-            iconFiveEl.setAttribute("src", iconUrl);
-            cardEl.append(iconFiveEl);
+            var iconFiveElm = document.createElement("img");
+            iconFiveElm.setAttribute("src", iconUrl);
+            cardElement.append(iconFiveElm);
   
-            var tempFiveEl = document.createElement("p");
-            tempFiveEl.textContent = temp;
-            cardEl.append(tempFiveEl);
+            var tempFiveElm = document.createElement("p");
+            tempFiveElm.textContent = temp;
+            cardElement.append(tempFiveElm);
   
-            var windFiveEl = document.createElement("p");
-            windFiveEl.textContent = wind;
-            cardEl.append(windFiveEl);
+            var windFiveElm = document.createElement("p");
+            windFiveElm.textContent = wind;
+            cardElement.append(windFiveElm);
   
-            var humidFiveEl = document.createElement("p");
-            humidFiveEl.textContent = humidity;
-            cardEl.append(humidFiveEl);
+            var humidFiveElm = document.createElement("p");
+            humidFiveElm.textContent = humidity;
+            cardElement.append(humidFiveElm);
   
-            fcElement.append(cardEl);
+            fcElement.append(cardElement);
   
             day++;
           }
@@ -164,8 +156,8 @@ function getWeather(searchVal) {
       });
   }
 
-  function uvIndex(latitude, longitude) {
-    var uviURL = "https://api.openweathermap.org/data/2.5/onecall?lat=" + latitude + "&lon=" + longitude + "&appid=" + apiKey;
+  function uvIndex(lat, long) {
+    var uviURL = "https://api.openweathermap.org/data/2.5/onecall?lat=" + lat + "&lon=" + long + "&appid=" + apiKey;
   
     fetch(uviURL)
       .then(function (response) {
@@ -174,12 +166,12 @@ function getWeather(searchVal) {
       .then(function (data) {
         console.log(data);
   
-        var uviValue = data.current.uvi;
-        console.log(uviValue);
+        var uviVal = data.current.uvi;
+        console.log(uviVal);
   
-        var uviEl = document.createElement("li");
-        $(uviEl).text("UV Index: " + uviValue);
-        todElement.append(uviEl);
+        var uviElement = document.createElement("li");
+        $(uviEl).text("UV Index: " + uviVal);
+        todElement.append(uviElement);
       });
   }
   saveSearchVal();
