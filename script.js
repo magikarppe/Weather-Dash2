@@ -2,7 +2,7 @@ var apiKey = "ef80f2dc5e60b96cd68851cdf32e0502";
 var todElement = document.getElementById("today");
 var fcElement = document.getElementById("forecast");
 var searchBtn = document.querySelector("#search-button");
-
+var clearButton = $("#clear-history");
 var cities = JSON.parse(localStorage.getItem("cities")) || [];
 var cityHistory = document.querySelector("#history");
 
@@ -13,7 +13,7 @@ function searchVal () {
     if (!cities.includes(searchVal)) {
       cities.unshift(searchVal);
       localStorage.setItem("cities", JSON.stringify(cities));
-    
+      
       getWeather(searchVal);
       fiveDay(searchVal);
       saveSearchVal();
@@ -40,9 +40,6 @@ function saveSearchVal() {
       cityHistory.appendChild(cityPrev);
     }
   }
-
-
-
 
 //current weather 
 function getWeather(searchVal) {
@@ -176,4 +173,12 @@ function getWeather(searchVal) {
   }
   saveSearchVal();
 
+function clearHistory(event){
+  event.preventDefault();
+  sCity=[];
+  localStorage.clear();
+  document.location.reload();
+} 
+
+$("#clear-history").on("click",clearHistory);
 
